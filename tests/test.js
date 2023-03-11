@@ -1,8 +1,9 @@
 const { toMatchInlineSnapshot } = require('jest-snapshot');
 const { NotDefinedError, ValidationError, EmptyAttributeError } = require('../dist/errors');
 const { EntityType } = require('../dist/types');
-const { compile, compileFromFile, loadTemplate, trimTemplate } = require('./helpers');
-
+const {
+  compile, compileFromFile, loadTemplate, trimTemplate,
+} = require('./helpers');
 
 expect.extend({
   toMatchTemplate(received, expected) {
@@ -65,7 +66,7 @@ describe('Correct rendering', () => {
 
   describe('loops', () => {
     test('one variable: simple markup', async () => {
-      const markup = `<div vl-for="item in items">{{item}}</div>`;
+      const markup = '<div vl-for="item in items">{{item}}</div>';
 
       const ctx = {
         items: [1, 2, 3],

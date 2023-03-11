@@ -1,7 +1,8 @@
-import { parse, valid, HTMLElement, Node } from 'node-html-parser';
+import { parse, valid, HTMLElement } from 'node-html-parser';
 import { EmptyAttributeError, IncorrectForParamsError, IncorrectTypeError, NotDefinedError, ValidationError } from './errors';
 import { EntityType } from './types';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type CTX = Record<string, any>;
 
 const attrsRegex = /(\s+vl-\w+=["'](\w+|)["'])/g;
