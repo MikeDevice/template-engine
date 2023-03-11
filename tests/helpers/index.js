@@ -21,5 +21,9 @@ exports.compileFromFile = async function (fileName, ...args) {
   return compile(code, ...args);
 };
 
+exports.trimTemplate = function (template) {
+  return template.replace(/\s*(<[^>]+>)\s*/gm, '$1')
+}
+
 exports.compile = compile;
 exports.loadTemplate = loadTemplate;

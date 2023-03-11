@@ -23,3 +23,19 @@ export class EmptyAttributeError extends Error {
     this.name = 'EmptyAttributeError';
   }
 }
+
+export class IncorrectForParamsError extends Error {
+  constructor(params: string | undefined) {
+    super(`params for attribute vl-for are incorrect: "${params}"`);
+
+    this.name = 'IncorrectForParamsError';
+  }
+}
+
+export class IncorrectTypeError extends Error {
+  constructor(name: string) {
+    super(`variable "${name}" has an incorrect type`);
+
+    this.name = 'IncorrectTypeError';
+  }
+}

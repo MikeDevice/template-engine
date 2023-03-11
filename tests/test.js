@@ -1,6 +1,14 @@
+const { toMatchInlineSnapshot } = require('jest-snapshot');
 const { NotDefinedError, ValidationError, EmptyAttributeError } = require('../dist/errors');
 const { EntityType } = require('../dist/types');
-const { compile, compileFromFile, loadTemplate } = require('./helpers');
+const { compile, compileFromFile, loadTemplate, trimTemplate } = require('./helpers');
+
+
+expect.extend({
+  toMatchTemplate(received, expected) {
+    return toMatchInlineSnapshot.call(this, trimTemplate(received), `"${trimTemplate(expected)}"`);
+  },
+});
 
 describe('Errors', () => {
   test('not valid markup', async () => {
@@ -53,5 +61,45 @@ describe('Correct rendering', () => {
     };
 
     expect(await compile(markup, ctx)).toBe('<div class="hello" id="root"></div>');
+  });
+
+  describe('loops', () => {
+    test('one variable: simple markup', async () => {
+      const markup = `<div vl-for="item in items">{{item}}</div>`;
+
+      const ctx = {
+        items: [1, 2, 3],
+      };
+
+      expect(await compile(markup, ctx)).toMatchTemplate(`
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+      `);
+    });
+
+    test('one variable: heavy markup', async () => {
+      const markup = `
+        <div vl-for="item in items" class="main">
+          <p class="main__data">this is {{item}}</p>
+        </div>
+      `;
+
+      const ctx = {
+        items: ['hello', 'test', 'something'],
+      };
+
+      expect(await compile(markup, ctx)).toMatchTemplate(`
+        <div class="main">
+          <p class="main__data">this is hello</p>
+        </div>
+        <div class="main">
+          <p class="main__data">this is test</p>
+        </div>
+        <div class="main">
+          <p class="main__data">this is something</p>
+        </div>
+      `);
+    });
   });
 });

@@ -1,5 +1,5 @@
-import { parse, valid, HTMLElement } from 'node-html-parser';
-import { EmptyAttributeError, NotDefinedError, ValidationError } from './errors';
+import { parse, valid, HTMLElement, Node } from 'node-html-parser';
+import { EmptyAttributeError, IncorrectForParamsError, IncorrectTypeError, NotDefinedError, ValidationError } from './errors';
 import { EntityType } from './types';
 
 type CTX = Record<string, any>;
@@ -18,6 +18,7 @@ function handleAttrs(markup: string) {
 interface NodesHash {
   variables: HTMLElement[];
   attrs: HTMLElement[];
+  loops: HTMLElement[];
 }
 
 class TemplateEngine {
@@ -39,24 +40,74 @@ class TemplateEngine {
     this.nodes = {
       variables: this.htmlTree.querySelectorAll('[vl-variable]'),
       attrs: this.htmlTree.querySelectorAll('[vl-attr]'),
+      loops: this.htmlTree.querySelectorAll('[vl-for]'),
     };
   }
 
+  private replaceVariableWithValue(node: HTMLElement, ctx: CTX) {
+    const variableName = node.textContent;
+
+    if (!variableName) {
+      throw new ValidationError();
+    }
+
+    const variableValue = ctx[variableName];
+
+    if (!(variableName in ctx)) {
+      throw new NotDefinedError(EntityType.variable, variableName);
+    }
+
+    node.replaceWith(variableValue.toString());
+  }
+
+  private parseLoop(node: HTMLElement, ctx: CTX) {
+    const forParamsStr = node.getAttribute('vl-for');
+    const forParamsMatch = forParamsStr?.match(/([_\w\d]+)\s+in\s+([_\w\d]+)/);
+
+    if (!forParamsMatch) {
+      throw new IncorrectForParamsError(forParamsStr);
+    }
+
+    const [, iteratorVar, ctxVariable] = forParamsMatch;
+
+    if (!(ctxVariable in ctx)) {
+      throw new NotDefinedError(EntityType.variable, ctxVariable);
+    }
+
+    const ctxValue = ctx[ctxVariable];
+
+    if (!Array.isArray(ctxValue)) {
+      throw new IncorrectTypeError(ctxVariable);
+    }
+
+    return { array: ctxValue, iteratorVar }
+  }
+
+  private handleLoop(node: HTMLElement, ctx: CTX) {
+    const { array, iteratorVar } = this.parseLoop(node, ctx);
+
+    node.removeAttribute('vl-for');
+
+    const parent = node.parentNode;
+    parent.innerHTML = ''
+
+    array.forEach((value) => {
+      const clone = node.clone() as HTMLElement;
+      const iterationCtx = { [iteratorVar]: value };
+
+      clone.querySelectorAll('[vl-variable]').forEach((node) => {
+        this.replaceVariableWithValue(node, iterationCtx);
+      })
+
+      parent.appendChild(clone)
+    });
+  }
+
   compile(ctx: CTX = {}) {
-    this.nodes.variables.forEach((node) => {
-      const variableName = node.textContent;
+    this.nodes.loops.forEach((node) => this.handleLoop(node, ctx))
 
-      if (!variableName) {
-        throw new ValidationError();
-      }
-
-      const variableValue = ctx[variableName];
-
-      if (!(variableName in ctx)) {
-        throw new NotDefinedError(EntityType.variable, variableName);
-      }
-
-      node.replaceWith(variableValue);
+    this.htmlTree.querySelectorAll('[vl-variable]').forEach((node) => {
+      this.replaceVariableWithValue(node, ctx);
     });
 
     this.nodes.attrs.forEach((node) => {
