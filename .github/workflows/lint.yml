@@ -1,4 +1,4 @@
-name: Test
+name: Lint
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
       - master
 
 jobs:
-  test:
+  lint:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -19,4 +19,4 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm run build
-      - run: npm run test
+      - run: npm run lint

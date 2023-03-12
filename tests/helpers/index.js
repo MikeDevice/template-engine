@@ -16,9 +16,13 @@ async function compile(code, data) {
   return templateEngine.compile(data);
 }
 
-exports.compileFromFile = async function (fileName, ...args) {
+exports.compileFromFile = async function compileFromFile(fileName, ...args) {
   const code = await loadTemplate(fileName);
   return compile(code, ...args);
+};
+
+exports.trimTemplate = function trimTemplate(template) {
+  return template.replace(/\s*(<[^>]+>)\s*/gm, '$1');
 };
 
 exports.compile = compile;
