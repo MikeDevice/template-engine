@@ -32,6 +32,14 @@ export class IncorrectForParamsError extends Error {
   }
 }
 
+export class IncorrectConditionParamsError extends Error {
+  constructor(params: string | undefined) {
+    super(`params for attribute vl-if are incorrect: "${params}"`);
+
+    this.name = 'IncorrectConditionParamsError';
+  }
+}
+
 export class IncorrectTypeError extends Error {
   constructor(name: string) {
     super(`variable "${name}" has an incorrect type`);

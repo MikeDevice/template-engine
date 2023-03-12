@@ -36,10 +36,7 @@ You can use variables wrapping them with double curly braces
 // markup
 <div>Hello, {{name}}!</div>
 
-// script
-templateEngine.compile({ name: 'World' });
-
-// result
+// script templateEngine.compile({ name: 'World' }); // result
 <div>Hello, World!</div>
 ```
 
@@ -48,12 +45,7 @@ templateEngine.compile({ name: 'World' });
 Usage variables inside html attributes is possible when you prefix any html attribute with `vl` keyword:
 
 ```html
-<div
-  vl-class="someVariable1"
-  vl-id="someVariable2"
-  vl-style="someVariable3"
-  vl-anyAttr="..."
-></div>
+<div vl-class="someVariable1" vl-id="someVariable2" vl-style="someVariable3" vl-anyAttr="..."></div>
 ```
 
 The real example:
@@ -62,24 +54,39 @@ The real example:
 // markup
 <div vl-class="className" vl-id="some-id">Hello!</div>
 
-// script
-templateEngine.compile({ className: 'root', 'some-id': 'hello' });
-
-// result
+// script templateEngine.compile({ className: 'root', 'some-id': 'hello' }); // result
 <div class="root" id="hello">Hello!</div>
 ```
 
 ### Loops
+
 To create loop, use the `vl-for` keyword:
 
 ```html
 <div vl-for="item in items">
-    <p>hello {{item}}</p>
-    <p>{{item}} hello</p>
+  <p>hello {{item}}</p>
+  <p>{{item}} hello</p>
 </div>
+```
+
+### Conditions
+
+To create condition, use the `vl-if` keyword:
+
+```html
+<main>
+  <section vl-if="shouldShowSection" class="section">
+    <h1>it's true</h1>
+    <img src="/some-image.png" vl-if="shouldShowImage" />
+    <p vl-else>no image</p>
+  </section>
+  <div vl-else>
+    <h2>Hello!</h2>
+    <img src="/some-image.png" vl-if="shouldShowImage" />
+  </div>
+</main>
 ```
 
 ## TODO
 
-1. Add conditions.
-2. Add **nested** loops.
+1. Add **nested** loops.
