@@ -1,5 +1,5 @@
 import { parse, valid, HTMLElement } from 'node-html-parser';
-import { EmptyAttributeError, IncorrectForParamsError, IncorrectTypeError, NotDefinedError, ValidationError } from './errors';
+import { EmptyAttributeError, IncorrectForParamsError, IncorrectTypeError, NotDefinedError, ValidationError, IncorrectConditionParamsError } from './errors';
 import { EntityType } from './types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -16,16 +16,9 @@ function handleAttrs(markup: string) {
   return markup.replace(attrsRegex, `$1 vl-attr`);
 }
 
-interface NodesHash {
-  variables: HTMLElement[];
-  attrs: HTMLElement[];
-  loops: HTMLElement[];
-}
-
 class TemplateEngine {
   private markup: string;
   private htmlTree: ReturnType<typeof parse>;
-  private nodes: NodesHash;
 
   constructor(markup: string) {
     this.markup = markup;
@@ -37,12 +30,6 @@ class TemplateEngine {
     if (!valid(this.markup)) {
       throw new ValidationError();
     }
-
-    this.nodes = {
-      variables: this.htmlTree.querySelectorAll('[vl-variable]'),
-      attrs: this.htmlTree.querySelectorAll('[vl-attr]'),
-      loops: this.htmlTree.querySelectorAll('[vl-for]'),
-    };
   }
 
   private replaceVariableWithValue(node: HTMLElement, ctx: CTX) {
@@ -105,14 +92,50 @@ class TemplateEngine {
     node.replaceWith(fakeLoopNode.innerHTML);
   }
 
+  private parseCondition(node: HTMLElement, ctx: CTX) {
+    const params = node.getAttribute('vl-if');
+    const match = params?.match(/^\s*([_\d\w]+)\s*$/);
+
+    if (!match) {
+      throw new IncorrectConditionParamsError(params);
+    }
+
+    const ctxVariable = match[1];
+
+    if (!(ctxVariable in ctx)) {
+      throw new NotDefinedError(EntityType.variable, ctxVariable);
+    }
+
+    const nextEl = node.nextElementSibling;
+
+    return {
+      value: !!ctx[ctxVariable],
+      elseNode: nextEl?.hasAttribute('vl-else') ? nextEl : null
+    }
+  }
+
+  private handleCondition(node: HTMLElement, ctx: CTX) {
+    const { value, elseNode } = this.parseCondition(node, ctx);
+
+    if (value) {
+      node.removeAttribute('vl-if');
+      elseNode?.remove();
+    } else {
+      node.remove();
+      elseNode?.removeAttribute('vl-else');
+    }
+  }
+
   compile(ctx: CTX = {}) {
-    this.nodes.loops.forEach((node) => this.handleLoop(node, ctx))
+    this.htmlTree.querySelectorAll('[vl-if]').forEach((node) => this.handleCondition(node, ctx))
+
+    this.htmlTree.querySelectorAll('[vl-for]').forEach((node) => this.handleLoop(node, ctx))
 
     this.htmlTree.querySelectorAll('[vl-variable]').forEach((node) => {
       this.replaceVariableWithValue(node, ctx);
     });
 
-    this.nodes.attrs.forEach((node) => {
+    this.htmlTree.querySelectorAll('[vl-attr]').forEach((node) => {
       Object.entries(node.attributes).forEach(([name, value]) => {
         if (!name.startsWith('vl-') || name === 'vl-attr') return;
 
