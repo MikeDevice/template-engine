@@ -32,7 +32,7 @@ templateEngine.compile({ name: 'whatever else' });
 
 You can use variables wrapping them with double curly braces
 
-```
+```html
 // markup
 <div>Hello, {{name}}!</div>
 
@@ -47,7 +47,7 @@ templateEngine.compile({ name: 'World' });
 
 Usage variables inside html attributes is possible when you prefix any html attribute with `vl` keyword:
 
-```
+```html
 <div
   vl-class="someVariable1"
   vl-id="someVariable2"
@@ -58,7 +58,7 @@ Usage variables inside html attributes is possible when you prefix any html attr
 
 The real example:
 
-```
+```html
 // markup
 <div vl-class="className" vl-id="some-id">Hello!</div>
 
@@ -67,6 +67,16 @@ templateEngine.compile({ className: 'root', 'some-id': 'hello' });
 
 // result
 <div class="root" id="hello">Hello!</div>
+```
+
+### Loops
+To create loop, use the `vl-for` keyword:
+
+```html
+<div vl-for="item in items">
+    <p>hello {{item}}</p>
+    <p>{{item}} hello</p>
+</div>
 ```
 
 ## TODO
