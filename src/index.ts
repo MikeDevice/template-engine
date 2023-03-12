@@ -87,10 +87,8 @@ class TemplateEngine {
   private handleLoop(node: HTMLElement, ctx: CTX) {
     const { array, iteratorVar } = this.parseLoop(node, ctx);
 
+    const fakeLoopNode = new HTMLElement('div', {}, '', null, [0, 0]);
     node.removeAttribute('vl-for');
-
-    const parent = node.parentNode;
-    parent.innerHTML = ''
 
     array.forEach((value) => {
       const clone = node.clone() as HTMLElement;
@@ -100,8 +98,11 @@ class TemplateEngine {
         this.replaceVariableWithValue(node, iterationCtx);
       })
 
-      parent.appendChild(clone)
+      fakeLoopNode.appendChild(clone)
     });
+
+
+    node.replaceWith(fakeLoopNode.innerHTML);
   }
 
   compile(ctx: CTX = {}) {
