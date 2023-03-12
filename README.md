@@ -72,4 +72,4 @@ templateEngine.compile({ className: 'root', 'some-id': 'hello' });
 ## TODO
 
 1. Add conditions.
-2. Add loops.
+2. Add **nested** loops.
