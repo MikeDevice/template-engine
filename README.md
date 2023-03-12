@@ -69,6 +69,24 @@ To create loop, use the `vl-for` keyword:
 </div>
 ```
 
+### Conditions
+
+To create condition, use the `vl-if` keyword:
+
+```html
+<main>
+  <section vl-if="shouldShowSection" class="section">
+    <h1>it's true</h1>
+    <img src="/some-image.png" vl-if="shouldShowImage" />
+    <p vl-else>no image</p>
+  </section>
+  <div vl-else>
+    <h2>Hello!</h2>
+    <img src="/some-image.png" vl-if="shouldShowImage" />
+  </div>
+</main>
+```
+
 ## TODO
 
 1. Add **nested** loops.
