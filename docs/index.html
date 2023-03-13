@@ -4,9 +4,35 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
-<body>
-    <pre>hello</pre>
+<body class="page">
+    <h1 class="page__header">Template Engine</h1>
+    <div class="page__content content">
+        <div class="content__view">
+            <textarea
+                rows="20"
+                class="content__text"
+                id="source"
+                autocapitalize="off"
+                autofocus
+                autocomplete="off"
+                spellcheck="false"
+            ></textarea>
+        </div>
+        <div class="content__view">
+            <textarea
+                rows="20"
+                class="content__text"
+                id="dest"
+                autocapitalize="off"
+                autocomplete="off"
+                readonly
+            ></textarea>
+        </div>
+    </div>
+
+    <script src="app.js" type="module"></script>
 </body>
 </html>
