@@ -12,35 +12,71 @@ function debounce(fn, delay = 0) {
     };
 }
 
+async function compile(code, ctx) {
+    try {
+        const response = await fetch(
+            '/api/compile',
+            {
+                method: 'post',
+                body: JSON.stringify({ code, ctx }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+
+        const result = await response?.json();
+
+        if (!response.ok) {
+            throw new Error(result.error)
+        }
+
+        return result?.code;
+    } catch (err) {
+        return err;
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     var $source = document.getElementById('source');
+    var $context = document.getElementById('context');
     var $dest = document.getElementById('dest');
 
-    function compile(src) {
-        return src;
-    }
-
-    function init() {
+    async function init() {
         const src  = `
-            <div vl-class="rootClassName" vl-id="rootId">
+            <body vl-class="rootClassName">
                 <h1 vl-class="titleClassName">
                     {{title}}
                 </h1>
                 <p vl-class="descriptionClassName">
                     {{description}}
                 </p>
-            </div>
+            </body>
         `
         .trim()
         .replace(/^\s{12}/mg, '');
 
+        const context = JSON.stringify({
+            title: 'this is a title',
+            description: 'hello',
+            rootClassName: 'page',
+            titleClassName: 'page__header',
+            descriptionClassName: 'page__description'
+        }, null, 2)
+
         $source.innerHTML = src;
-        $dest.innerHTML = compile(src);
+        $context.innerHTML = context;
+        $dest.innerHTML = await compile(src, JSON.parse(context));
     }
 
     function syncSource() {
         $source.addEventListener('input', debounce((e) => {
-            $dest.innerHTML = compile(e.target.value);
+            $dest.innerHTML = 'compiling...';
+
+            compile(e.target.value, JSON.parse($context.value))
+                .then(text => {
+                    $dest.innerHTML = text;
+                })
         }, 400));
     }
 

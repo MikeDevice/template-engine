@@ -23,6 +23,26 @@ button {
     padding: 50px 0;
 }
 
+.page__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 128px;
+}
+
+.data {
+    display: flex;
+    flex-direction: column;
+}
+
+.data:not(:last-child) {
+    margin-bottom: 32px;
+}
+
+.data__label {
+    text-align: center;
+    margin-bottom: 12px;
+}
+
 .content {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -32,9 +52,8 @@ button {
 
 .content__text {
     resize: vertical;
-    min-height: 400px;
     width: 100%;
-    max-width: 500px;
+    min-height: 300px;
     min-width: 300px;
     font-size: 16px;
     box-sizing: border-box;
@@ -45,4 +64,7 @@ button {
 .content__view {
     display: flex;
     justify-content: center;
+}
+
+.data-group {
 }

@@ -1,38 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <title>Document</title>
-</head>
-<body class="page">
-    <h1 class="page__header">Template Engine</h1>
-    <div class="page__content content">
-        <div class="content__view">
+  </head>
+  <body class="page">
+    <header class="page__header">
+      <h1>Template Engine</h1>
+    </header>
+
+    <main class="page__content">
+      <section>
+        <div class="data-group">
+          <div class="data">
+            <label class="data__label" for="source">Source code</label>
             <textarea
-                rows="20"
-                class="content__text"
-                id="source"
-                autocapitalize="off"
-                autofocus
-                autocomplete="off"
-                spellcheck="false"
+              id="source"
+              rows="10"
+              class="content__text"
+              autocapitalize="off"
+              autofocus
+              autocomplete="off"
+              spellcheck="false"
             ></textarea>
-        </div>
-        <div class="content__view">
+          </div>
+
+          <div class="data">
+            <label class="data__label" for="context">Context</label>
             <textarea
-                rows="20"
-                class="content__text"
-                id="dest"
-                autocapitalize="off"
-                autocomplete="off"
-                readonly
+              id="context"
+              rows="5"
+              class="content__text"
+              autocapitalize="off"
+              autofocus
+              autocomplete="off"
+              spellcheck="false"
             ></textarea>
+          </div>
         </div>
-    </div>
+      </section>
+
+      <section>
+        <div class="data">
+          <label class="data__label" for="dest">Result</label>
+          <textarea
+            rows="10"
+            class="content__text"
+            id="dest"
+            autocapitalize="off"
+            autocomplete="off"
+            readonly
+          ></textarea>
+        </div>
+      </section>
+    </main>
 
     <script src="app.js" type="module"></script>
-</body>
+  </body>
 </html>

@@ -3,3 +3,4 @@ dist
 example
 .vscode
 **/coverage/**
+.vercel
