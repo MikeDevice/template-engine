@@ -1,12 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <title>Document</title>
-</head>
-<body>
-    <pre>hello</pre>
-</body>
+  </head>
+  <body class="page">
+    <header class="page__header">
+      <h1>Template Engine</h1>
+    </header>
+
+    <main class="page__content">
+      <section>
+        <div class="data-group">
+          <div class="data">
+            <label class="data__label" for="source">Source code</label>
+            <textarea
+              id="source"
+              rows="10"
+              class="content__text"
+              autocapitalize="off"
+              autofocus
+              autocomplete="off"
+              spellcheck="false"
+            ></textarea>
+          </div>
+
+          <div class="data">
+            <label class="data__label" for="context">Context</label>
+            <textarea
+              id="context"
+              rows="5"
+              class="content__text"
+              autocapitalize="off"
+              autofocus
+              autocomplete="off"
+              spellcheck="false"
+            ></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="data">
+          <label class="data__label" for="dest">Result</label>
+          <textarea
+            rows="10"
+            class="content__text"
+            id="dest"
+            autocapitalize="off"
+            autocomplete="off"
+            readonly
+          ></textarea>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js" type="module"></script>
+  </body>
 </html>
