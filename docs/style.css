@@ -1,6 +1,11 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
-    min-width: 480px;
+    min-width: 320px;
+    padding: 20px 20px 30px;
 }
 
 body,
@@ -11,60 +16,68 @@ button {
     line-height: 1.4;
 }
 
+textarea {
+    outline: none;
+    resize: vertical;
+}
+
 .page {
     display: grid;
-    grid-template-rows: 200px 1fr;
-    max-width: 1200px;
-    margin: 0 auto;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
 }
 
 .page__header {
     text-align: center;
-    padding: 50px 0;
 }
 
 .page__content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 128px;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 20px;
 }
 
-.data {
-    display: flex;
-    flex-direction: column;
-}
-
-.data:not(:last-child) {
-    margin-bottom: 32px;
-}
-
-.data__label {
-    text-align: center;
-    margin-bottom: 12px;
-}
-
-.content {
+.page__block {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 50px;
-    padding: 0 30px;
+    grid-template-rows: auto 1fr;
+    gap: 10px
 }
 
-.content__text {
-    resize: vertical;
-    width: 100%;
-    min-height: 300px;
-    min-width: 300px;
-    font-size: 16px;
-    box-sizing: border-box;
-    padding: 20px;
+.page__block:not(:last-child) {
+    margin-bottom: 20px;
+}
+
+.page__footer {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.code {
     font-family: 'Courier New', Courier, monospace;
+    min-height: calc(100vh / 3);
 }
 
-.content__view {
-    display: flex;
-    justify-content: center;
-}
+@media (min-width: 768px) {
+    .page__content {
+        grid-template-rows: none;
+        grid-template-areas:
+            "source  result"
+            "context result";
+    }
 
-.data-group {
+    .page__block:not(:last-child) {
+        margin-bottom: 0;
+    }
+
+    .page__content .source {
+        grid-area: source;
+    }
+
+    .page__content .context {
+        grid-area: context;
+    }
+
+    .page__content .result {
+        grid-area: result;
+    }
 }

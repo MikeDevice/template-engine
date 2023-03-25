@@ -44,24 +44,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function init() {
         const src  = `
-            <body vl-class="rootClassName">
-                <h1 vl-class="titleClassName">
-                    {{title}}
-                </h1>
-                <p vl-class="descriptionClassName">
-                    {{description}}
-                </p>
+            <body vl-class="cssPage">
+              <h1 vl-class="cssPage__Header">
+                {{title}}
+              </h1>
+              <p vl-class="cssPage__Description">
+                {{description}}
+              </p>
+              <h2>Condition example</h2>
+              <p vl-if="conditionValue">value is truthy</p>
+              <p vl-else>value is falsy</p>
+              <ul>
+                <li vl-for="item in array">it's a {{item}}</li>
+              </ul>
             </body>
         `
         .trim()
         .replace(/^\s{12}/mg, '');
 
         const context = JSON.stringify({
-            title: 'this is a title',
-            description: 'hello',
-            rootClassName: 'page',
-            titleClassName: 'page__header',
-            descriptionClassName: 'page__description'
+            title: 'Template Engine',
+            description: 'Look! It\'s a template engine',
+            conditionValue: true,
+            array: ['book', 'teapot', 'cup'],
+            cssPage: 'page',
+            cssPage__Header: 'page__header',
+            cssPage__Description: 'page__description',
         }, null, 2)
 
         $source.innerHTML = src;
@@ -69,17 +77,28 @@ document.addEventListener('DOMContentLoaded', () => {
         $dest.innerHTML = await compile(src, JSON.parse(context));
     }
 
-    function syncSource() {
-        $source.addEventListener('input', debounce((e) => {
+    function sync() {
+        async function _compileWithInsertToPage(code, ctx) {
             $dest.innerHTML = 'compiling...';
 
-            compile(e.target.value, JSON.parse($context.value))
-                .then(text => {
-                    $dest.innerHTML = text;
-                })
-        }, 400));
+            try {
+                $dest.innerHTML = await compile(code, JSON.parse(ctx));
+            } catch (err) {
+                $dest.innerHTML = 'Error: compiling error. Check your context JSON';
+            }
+        };
+
+        const compileWithInsertToPage = debounce(_compileWithInsertToPage, 400);
+
+        $source.addEventListener('input', (e) => {
+            compileWithInsertToPage(e.target.value, $context.value);
+        });
+
+        $context.addEventListener('input', (e) => {
+            compileWithInsertToPage($source.value, e.target.value);
+        });
     }
 
     init();
-    syncSource();
+    sync();
 })

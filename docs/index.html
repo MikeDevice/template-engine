@@ -13,50 +13,40 @@
     </header>
 
     <main class="page__content">
-      <section>
-        <div class="data-group">
-          <div class="data">
-            <label class="data__label" for="source">Source code</label>
-            <textarea
-              id="source"
-              rows="10"
-              class="content__text"
-              autocapitalize="off"
-              autofocus
-              autocomplete="off"
-              spellcheck="false"
-            ></textarea>
-          </div>
-
-          <div class="data">
-            <label class="data__label" for="context">Context</label>
-            <textarea
-              id="context"
-              rows="5"
-              class="content__text"
-              autocapitalize="off"
-              autofocus
-              autocomplete="off"
-              spellcheck="false"
-            ></textarea>
-          </div>
-        </div>
+      <section class="page__block source">
+        <label for="source">Source code</label>
+        <textarea
+          id="source"
+          rows="10"
+          class="code"
+          autocapitalize="off"
+          autofocus
+          autocomplete="off"
+          spellcheck="false"
+        ></textarea>
       </section>
-
-      <section>
-        <div class="data">
-          <label class="data__label" for="dest">Result</label>
-          <textarea
-            rows="10"
-            class="content__text"
-            id="dest"
-            autocapitalize="off"
-            autocomplete="off"
-            readonly
-          ></textarea>
-        </div>
+      <section class="page__block context">
+        <label for="context">Context</label>
+        <textarea
+          id="context"
+          rows="5"
+          class="code"
+          autocapitalize="off"
+          autofocus
+          autocomplete="off"
+          spellcheck="false"
+        ></textarea>
+      </section>
+      <section class="page__block result">
+        <label for="dest">Result</label>
+        <textarea rows="10" class="code" id="dest" autocapitalize="off" autocomplete="off" readonly></textarea>
       </section>
     </main>
+
+    <footer class="page__footer">
+      Check the source code and documentation at
+      <a href="https://github.com/MikeDevice/template-engine" target="_blank">GitHub</a>
+    </footer>
 
     <script src="app.js" type="module"></script>
   </body>
