@@ -1,0 +1,13 @@
+{
+    "name": "template-engine-demo",
+    "private": "true",
+    "author": "Mikhail Vyrodov <me.vyrodov@ya.ru>",
+    "license": "MIT",
+    "scripts": {
+        "build": "(cd .. && npm run build)"
+    },
+    "dependencies": {
+        "js-beautify": "^1.14.7",
+        "template-engine": "../"
+    }
+}
